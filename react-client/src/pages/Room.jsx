@@ -4,32 +4,61 @@ import { socket } from "../socket";
 
 const Room = () => {
   const { roomId } = useParams();
-  const [isConnected, setIsConnected] = useState(socket.connected);
+  const [isConnecting, setIsConnecting] = useState(true);
+  const [joinedRoom, setJoinedRoom] = useState(false);
+  const [opponentCount, setOpponentCount] = useState(null);
 
   useEffect(() => {
     function onConnect() {
-      setIsConnected(true);
+      socket.emit("join-room", roomId, (joinRoomSucceeded, playerCount) => {
+        if (joinRoomSucceeded) {
+          setJoinedRoom(true);
+          setOpponentCount(playerCount - 1);
+        } else {
+          setJoinedRoom(false);
+          socket.disconnect();
+        }
+
+        setIsConnecting(false);
+      });
     }
 
-    function onDisconnect() {
-      setIsConnected(false);
+    function onPlayerCountUpdate(playerCount) {
+      setOpponentCount(playerCount - 1);
     }
 
     socket.on("connect", onConnect);
-    socket.on("disconnect", onDisconnect);
+    socket.on("playerCount-update", onPlayerCountUpdate);
 
     socket.connect();
 
     return () => {
       socket.off("connect", onConnect);
-      socket.off("disconnect", onDisconnect);
+      socket.off("playerCount-update", onPlayerCountUpdate);
     };
   }, []);
 
   return (
     <>
-      <div>Room {roomId}</div>
-      <div>{isConnected ? "connected" : "not connected"}</div>
+      <div>
+        {isConnecting ? (
+          <h1>"Connecting..."</h1>
+        ) : (
+          <>
+            {joinedRoom ? (
+              <h1>
+                You are in room {roomId}. Count of other players in the room ={" "}
+                {opponentCount}
+              </h1>
+            ) : (
+              <h1>
+                You cannot join the room right now. Please refresh the page
+                later.
+              </h1>
+            )}
+          </>
+        )}
+      </div>
     </>
   );
 };

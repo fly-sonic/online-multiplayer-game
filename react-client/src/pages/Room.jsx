@@ -10,7 +10,7 @@ const Room = () => {
 
   useEffect(() => {
     function onConnect() {
-      socket.emit("join-room", roomId, (joinRoomSucceeded, playerCount) => {
+      socket.emit("try-join-room", roomId, (joinRoomSucceeded, playerCount) => {
         if (joinRoomSucceeded) {
           setJoinedRoom(true);
           setOpponentCount(playerCount - 1);

@@ -1,5 +1,5 @@
 module.exports = (io, socket) => {
-  socket.on("join-room", (roomId, cb) => {
+  socket.on("try-join-room", (roomId, cb) => {
     let joinRoomSucceeded = false;
     if (
       !io.sockets.adapter.rooms.has(roomId) ||

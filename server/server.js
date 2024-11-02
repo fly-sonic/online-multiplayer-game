@@ -11,12 +11,28 @@ app.use(bodyParser.json());
 
 const server = http.createServer(app);
 
-const io = new Server(server, {
-  cors: {
-    origin: "http://localhost:5173", // TODO
+let corsPolicy = {};
+// TODO
+if (process.env.NODE_ENV == "development") {
+  corsPolicy = {
+    origin: ["http://localhost:5173", "http://localhost:3030"],
     methods: ["GET", "POST"],
-  },
+    credentials: true,
+  };
+}
+
+const io = new Server(server, {
+  cors: corsPolicy,
 });
+
+// TODO
+if (process.env.NODE_ENV == "development") {
+  const { instrument } = require("@socket.io/admin-ui");
+  instrument(io, {
+    auth: false,
+    mode: "development",
+  });
+}
 
 io.on("connection", (socket) => {
   console.log(`${socket.id} connected...`);

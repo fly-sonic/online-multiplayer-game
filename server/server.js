@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const http = require("http");
 const cors = require("cors");
 const { Server } = require("socket.io");
+const registerSocketEventHandler = require("./socketEventHandler");
 
 const app = express();
 app.use(cors());
@@ -19,45 +20,7 @@ const io = new Server(server, {
 
 io.on("connection", (socket) => {
   console.log(`${socket.id} connected...`);
-
-  socket.on("join-room", (roomId, cb) => {
-    let joinRoomSucceeded = false;
-    if (
-      !io.sockets.adapter.rooms.has(roomId) ||
-      io.sockets.adapter.rooms.get(roomId).size < 2
-    ) {
-      socket.join(roomId);
-      joinRoomSucceeded = true;
-    }
-
-    cb(joinRoomSucceeded, io.sockets.adapter.rooms.get(roomId).size);
-
-    if (joinRoomSucceeded) {
-      // every socket in the room excluding the sender will get the event
-      socket
-        .to(roomId)
-        .emit("playerCount-update", io.sockets.adapter.rooms.get(roomId).size);
-    }
-  });
-
-  socket.on("disconnecting", (reason) => {
-    socket.rooms.forEach((roomId) => {
-      if (roomId === socket.id) {
-        return;
-      }
-
-      socket
-        .to(roomId)
-        .emit(
-          "playerCount-update",
-          io.sockets.adapter.rooms.get(roomId).size - 1
-        );
-    });
-  });
-
-  socket.on("disconnect", () => {
-    console.log(`${socket.id} disconnected!`);
-  });
+  registerSocketEventHandler(io, socket);
 });
 
 const PORT = 3001;

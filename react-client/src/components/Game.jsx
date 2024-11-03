@@ -88,12 +88,25 @@ const Game = ({ socket, roomId, size, handleRestart }) => {
         />
       ))}
 
+      <br />
+
+      {!gameStatus.gameOver && (
+        <>
+          {gameStatus.activeSide === mySide && (
+            <h1>It is your turn now. Please make your next move.</h1>
+          )}
+          {gameStatus.activeSide !== mySide && (
+            <h1>It is your opponent's turn now...</h1>
+          )}
+        </>
+      )}
+
       {gameStatus.gameOver && (
         <>
           {gameStatus.winner === null ? (
-            <h1>Tie</h1>
+            <h1>Game Ended. It's a tie!</h1>
           ) : (
-            <h1>Winner is {gameStatus.winner}</h1>
+            <h1>Game Ended. Winner is {gameStatus.winner}</h1>
           )}
 
           <button onClick={handleRestart}>Play again!</button>

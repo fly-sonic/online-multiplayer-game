@@ -11,6 +11,7 @@ const BeforeGameStart = ({ socket, roomId }) => {
 
   return (
     <>
+      <h1>Every one is here! Click the button to start the game!</h1>
       <button onClick={handleClickStart} disabled={ready}>
         Start Game
       </button>

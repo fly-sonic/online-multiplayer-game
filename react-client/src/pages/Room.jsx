@@ -41,18 +41,23 @@ const Room = () => {
 
   return (
     <>
-      <h1>socket id = {socket.id}</h1>
       <div>
         {isConnecting ? (
-          <h1>"Connecting..."</h1>
+          <h1>Connecting...</h1>
         ) : (
           <>
             {joinedRoom ? (
               <>
-                <h1>
-                  You are in room {roomId}. Count of other players in the room ={" "}
-                  {opponentCount}
-                </h1>
+                {opponentCount === 0 && (
+                  <>
+                    <h1>There is only you in this game room.</h1>
+                    <h1>Waiting for another player to join the room...</h1>
+                    <p>
+                      (You can send the page's link to your friend so he/she can
+                      play with you)
+                    </p>
+                  </>
+                )}
 
                 {opponentCount === 1 && (
                   <GameRoom socket={socket} roomId={roomId} />

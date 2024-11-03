@@ -84,6 +84,11 @@ button[disabled] {
   width: 34px;
 }
 
+.board-row {
+  width: 136px;
+  margin: 0 auto;
+}
+
 .board-row:after {
   clear: both;
   content: "";

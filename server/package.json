@@ -11,8 +11,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index",
-    "dev": "NODE_ENV=development nodemon index"
+    "start": "node server",
+    "dev": "NODE_ENV=development nodemon server"
   },
   "author": "",
   "license": "ISC",

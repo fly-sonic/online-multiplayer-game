@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { socket } from "../socket";
+import GameRoom from "../components/GameRoom";
 
 const Room = () => {
   const { roomId } = useParams();
@@ -16,7 +17,7 @@ const Room = () => {
           setOpponentCount(playerCount - 1);
         } else {
           setJoinedRoom(false);
-          socket.disconnect();
+          //socket.disconnect();
         }
 
         setIsConnecting(false);
@@ -40,16 +41,23 @@ const Room = () => {
 
   return (
     <>
+      <h1>socket id = {socket.id}</h1>
       <div>
         {isConnecting ? (
           <h1>"Connecting..."</h1>
         ) : (
           <>
             {joinedRoom ? (
-              <h1>
-                You are in room {roomId}. Count of other players in the room ={" "}
-                {opponentCount}
-              </h1>
+              <>
+                <h1>
+                  You are in room {roomId}. Count of other players in the room ={" "}
+                  {opponentCount}
+                </h1>
+
+                {opponentCount === 1 && (
+                  <GameRoom socket={socket} roomId={roomId} />
+                )}
+              </>
             ) : (
               <h1>
                 You cannot join the room right now. Please refresh the page

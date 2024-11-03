@@ -13,7 +13,7 @@ const server = http.createServer(app);
 
 let corsPolicy = {};
 // TODO
-if (process.env.NODE_ENV == "development") {
+if (process.env.NODE_ENV === "development") {
   corsPolicy = {
     origin: ["http://localhost:5173", "http://localhost:3030"],
     methods: ["GET", "POST"],
@@ -26,7 +26,7 @@ const io = new Server(server, {
 });
 
 // TODO
-if (process.env.NODE_ENV == "development") {
+if (process.env.NODE_ENV === "development") {
   const { instrument } = require("@socket.io/admin-ui");
   instrument(io, {
     auth: false,
